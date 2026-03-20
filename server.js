@@ -69,7 +69,7 @@ app.post('/api/login', async (req, res) => {
 });
 
 // Catch-all to serve index.html
-app.get('*', (req, res) => {
+app.use((req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
