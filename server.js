@@ -14,7 +14,9 @@ app.use(express.static(path.join(__dirname, '')));
 // For MongoDB Atlas, replace with your connection string
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/ai_assistant';
 
-mongoose.connect(MONGO_URI)
+mongoose.connect(MONGO_URI, {
+  serverSelectionTimeoutMS: 5000 // 5 seconds timeout
+})
   .then(() => console.log('Connected to MongoDB successfully'))
   .catch(err => console.error('MongoDB connection error:', err));
 
@@ -30,6 +32,10 @@ const User = mongoose.model('User', userSchema);
 // Signup Route
 app.post('/api/signup', async (req, res) => {
   try {
+    if (mongoose.connection.readyState !== 1) {
+      return res.status(500).json({ error: 'Backend is running, but MongoDB is not connected! Please check your MONGO_URI in Render and allow 0.0.0.0/0 in MongoDB Atlas.' });
+    }
+
     const { name, email, password } = req.body;
     
     // Check if user exists
@@ -51,6 +57,10 @@ app.post('/api/signup', async (req, res) => {
 // Login Route
 app.post('/api/login', async (req, res) => {
   try {
+    if (mongoose.connection.readyState !== 1) {
+      return res.status(500).json({ error: 'Backend is running, but MongoDB is not connected! Please check your MONGO_URI in Render and allow 0.0.0.0/0 in MongoDB Atlas.' });
+    }
+
     const { email, password } = req.body;
     
     // Find user
