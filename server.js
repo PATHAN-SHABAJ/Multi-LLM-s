@@ -1,0 +1,71 @@
+const express = require('express');
+const mongoose = require('mongoose');
+const cors = require('cors');
+
+const app = express();
+app.use(express.json());
+app.use(cors());
+
+// Connect to MongoDB
+// For local MongoDB: mongodb://127.0.0.1:27017/ai_assistant
+// For MongoDB Atlas, replace with your connection string
+const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/ai_assistant';
+
+mongoose.connect(MONGO_URI)
+  .then(() => console.log('Connected to MongoDB successfully'))
+  .catch(err => console.error('MongoDB connection error:', err));
+
+// User Schema
+const userSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
+  password: { type: String, required: true } // In production, hash this password!
+});
+
+const User = mongoose.model('User', userSchema);
+
+// Signup Route
+app.post('/api/signup', async (req, res) => {
+  try {
+    const { name, email, password } = req.body;
+    
+    // Check if user exists
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ error: 'User with this email already exists' });
+    }
+
+    // Create user
+    const newUser = new User({ name, email, password });
+    await newUser.save();
+    
+    res.status(201).json({ message: 'User created successfully' });
+  } catch (error) {
+    res.status(500).json({ error: 'Server error during signup' });
+  }
+});
+
+// Login Route
+app.post('/api/login', async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    
+    // Find user
+    const user = await User.findOne({ email });
+    if (!user || user.password !== password) {
+      return res.status(401).json({ error: 'Invalid email or password' });
+    }
+    
+    res.status(200).json({ 
+      message: 'Login successful',
+      user: { name: user.name, email: user.email }
+    });
+  } catch (error) {
+    res.status(500).json({ error: 'Server error during login' });
+  }
+});
+
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
+});
