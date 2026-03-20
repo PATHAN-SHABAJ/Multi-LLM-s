@@ -1522,7 +1522,7 @@
                     AI
                 </div>
                 <button class="btn-secondary" style="padding: 10px 24px;"
-                    onclick="showView('login-view')">Login</button>
+                    onclick="showView('app-view')">Open App</button>
             </nav>
 
             <section class="hero">
@@ -1534,7 +1534,7 @@
                 <p>Chat with top-tier models like Gemini, Claude, and Llama 3 in a beautiful, high-performance interface
                     designed for the future.</p>
                 <div class="cta-group">
-                    <button class="btn-primary" onclick="showView('login-view')">Get Started for Free</button>
+                    <button class="btn-primary" onclick="showView('app-view')">Get Started for Free</button>
                     <button class="btn-secondary" onclick="window.scrollTo(0, 800)">Explore Features</button>
                 </div>
             </section>
@@ -1561,74 +1561,6 @@
         </div>
     </div>
 
-    <!-- ── LOGIN VIEW ── -->
-    <div class="view-section" id="login-view">
-        <!-- Floating 3D Bot Icons -->
-        <div class="floating-bot b1">🤖</div>
-        <div class="floating-bot b2">🧠</div>
-        <div class="floating-bot b3">💬</div>
-        <div class="floating-bot b4">✨</div>
-        <div class="floating-bot b5">🚀</div>
-        <div class="floating-bot b6">🤖</div>
-
-        <div class="login-card" style="z-index: 2; position: relative;">
-            <div class="ai-logo" style="margin: 0 auto 24px; width: 56px; height: 56px; font-size: 28px;">&#x1F916;
-            </div>
-            <h2>Welcome Back</h2>
-            <p>Sign in to your AI account</p>
-            <div class="form-group">
-                <label>Email Address</label>
-                <input type="email" placeholder="name@company.com" id="login-email">
-            </div>
-            <div class="form-group">
-                <label>Password</label>
-                <input type="password" placeholder="••••••••" id="login-pass">
-            </div>
-            <button class="btn-primary login-btn" onclick="handleLogin()">Sign In</button>
-            <p style="margin-top: 20px; font-size: 13px; color: #64748b;">Don't have an account? <a href="#"
-                    style="color: #818cf8;" onclick="showView('signup-view')">Sign Up</a></p>
-            <a href="#" class="back-link" onclick="showView('landing-view')">&#8592; Back to home</a>
-        </div>
-    </div>
-
-    <!-- ── SIGNUP VIEW ── -->
-    <div class="view-section" id="signup-view">
-        <!-- Floating 3D Bot Icons -->
-        <div class="floating-bot b3">🤖</div>
-        <div class="floating-bot b1">💡</div>
-        <div class="floating-bot b5">🧠</div>
-        <div class="floating-bot b2">✨</div>
-        <div class="floating-bot b4">💬</div>
-        <div class="floating-bot b6">🚀</div>
-
-        <div class="login-card" style="max-width: 480px; padding: 40px 44px; z-index: 2; position: relative;">
-            <div class="ai-logo" style="margin: 0 auto 20px; width: 50px; height: 50px; font-size: 24px;">&#x1F916;
-            </div>
-            <h2>Create Account</h2>
-            <p style="color: #94a3b8; margin-bottom: 28px;">Join AI Assistant today &mdash; free forever</p>
-            <div class="form-group">
-                <label>Full Name</label>
-                <input type="text" placeholder="John Doe" id="signup-name">
-            </div>
-            <div class="form-group">
-                <label>Email Address</label>
-                <input type="email" placeholder="name@company.com" id="signup-email">
-            </div>
-            <div class="form-group">
-                <label>Password</label>
-                <input type="password" placeholder="At least 6 characters" id="signup-pass">
-            </div>
-            <div class="form-group">
-                <label>Confirm Password</label>
-                <input type="password" placeholder="Repeat your password" id="signup-confirm">
-            </div>
-            <button class="btn-primary login-btn" onclick="handleSignup()">Create Account</button>
-            <p style="margin-top: 20px; font-size: 13px; color: #64748b;">Already have an account? <a href="#"
-                    style="color: #818cf8;" onclick="showView('login-view')">Sign In</a></p>
-            <a href="#" class="back-link" onclick="showView('landing-view')">&#8592; Back to home</a>
-        </div>
-    </div>
-
     <!-- ── CHAT VIEW ── -->
     <div class="view-section" id="app-view" style="position:relative;">
 
@@ -1638,28 +1570,7 @@
         <div class="floating-bot b4" style="opacity:0.07;">✨</div>
         <div class="floating-bot b6" style="opacity:0.05;">💬</div>
 
-        <!-- Profile Dropdown -->
-        <div class="profile-dropdown" id="profile-dropdown">
-            <div class="profile-dropdown-header">
-                <div class="profile-dropdown-avatar" id="pd-avatar">?</div>
-                <div class="profile-dropdown-info">
-                    <div class="pd-name" id="pd-name">User</div>
-                    <div class="pd-email" id="pd-email">user@email.com</div>
-                </div>
-            </div>
-            <button class="pd-menu-item" onclick="openProfilePanel()">
-                &#128100; View Profile
-            </button>
-            <button class="pd-menu-item" onclick="showView('compare-view')">
-                &#128300; Compare Models
-            </button>
-            <button class="pd-menu-item" onclick="startNewChat()">
-                &#128172; New Chat
-            </button>
-            <button class="pd-menu-item danger" onclick="handleLogout()">
-                &#128682; Sign Out
-            </button>
-        </div>
+
 
         <!-- Sidebar Toggle Button -->
         <button class="sidebar-toggle" id="sidebar-toggle" onclick="toggleSidebar()" title="Toggle Sidebar">❯</button>
@@ -1724,8 +1635,6 @@
                     </select>
                     <button class="clear-btn" style="margin-right: 8px;" onclick="openApiModal()">⚙️ API
                         Settings</button>
-                    <button class="clear-btn" onclick="clearChat()">Clear</button>
-                    <div class="profile-avatar" id="profile-avatar-btn" onclick="toggleProfileDropdown()">?</div>
                 </div>
             </header>
 
@@ -1884,121 +1793,7 @@
             }
         }
 
-        // ── CURRENT USER (restore from localStorage) ──
-        let currentUser = JSON.parse(localStorage.getItem('ai_user') || 'null')
-        // Restore profile UI if user was already logged in
-        if (currentUser) {
-            setTimeout(() => updateProfileUI(), 100)
-        }
 
-        // Redirect based on auth state
-        async function handleLogin() {
-            const email = document.getElementById('login-email').value.trim();
-            const pass = document.getElementById('login-pass').value;
-
-            if (!email || !pass) {
-                alert('Please enter both email and password.');
-                return;
-            }
-
-            try {
-                const response = await fetch('/api/login', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email, password: pass })
-                });
-                
-                const data = await response.json();
-                
-                if (response.ok) {
-                    doLogin(data.user);
-                } else {
-                    alert(data.error || 'Login failed');
-                }
-            } catch (err) {
-                console.error(err);
-                alert('Could not connect to the server. Make sure the Node.js backend is running (npm run dev/node server.js).');
-            }
-        }
-
-        async function handleSignup() {
-            const name = document.getElementById('signup-name').value.trim();
-            const email = document.getElementById('signup-email').value.trim();
-            const pass = document.getElementById('signup-pass').value;
-            const confirm = document.getElementById('signup-confirm').value;
-
-            if (!name || !email || !pass || !confirm) { alert('All fields are required.'); return; }
-            if (pass !== confirm) { alert('Passwords do not match.'); return; }
-            if (pass.length < 6) { alert('Password must be at least 6 characters.'); return; }
-
-            try {
-                const response = await fetch('/api/signup', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ name, email, password: pass })
-                });
-
-                const data = await response.json();
-
-                if (response.ok) {
-                    showView('login-view');
-                    alert('Account created successfully! Please sign in.');
-                } else {
-                    alert(data.error || 'Signup failed');
-                }
-            } catch (err) {
-                console.error(err);
-                alert('Could not connect to the server. Make sure the Node.js backend is running (npm run dev/node server.js).');
-            }
-        }
-
-        function doLogin(user) {
-            currentUser = user;
-            localStorage.setItem('ai_user', JSON.stringify(user));
-            updateProfileUI();
-            showView('app-view');
-            addMessage(`Welcome, ${user.name}! I'm your AI assistant. How can I help you today?`, 'bot');
-        }
-
-        function handleLogout() {
-            currentUser = null;
-            toggleProfileDropdown();
-            document.getElementById('chat').innerHTML = '';
-            geminiMessages = []; openrouterMessages = []; claudeMessages = []; groqMessages = [];
-            activeChatId = null;
-            showView('landing-view');
-        }
-
-        function toggleProfileDropdown() {
-            const dd = document.getElementById('profile-dropdown');
-            dd.classList.toggle('open');
-        }
-
-        // Close dropdown when clicking outside
-        document.addEventListener('click', function (e) {
-            const dd = document.getElementById('profile-dropdown');
-            const btn = document.getElementById('profile-avatar-btn');
-            if (dd && btn && !dd.contains(e.target) && !btn.contains(e.target)) {
-                dd.classList.remove('open');
-            }
-        });
-
-        function updateProfileUI() {
-            if (!currentUser) return;
-            const initials = currentUser.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
-            document.getElementById('profile-avatar-btn').innerText = initials;
-            document.getElementById('pd-avatar').innerText = initials;
-            document.getElementById('pd-name').innerText = currentUser.name;
-            document.getElementById('pd-email').innerText = currentUser.email;
-        }
-
-        function openProfilePanel() {
-            toggleProfileDropdown();
-            if (!currentUser) return;
-            const initials = currentUser.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
-            const info = `🧑 Name: ${currentUser.name}\n\n📧 Email: ${currentUser.email}\n\n🔑 Password: ${'*'.repeat(currentUser.password.length)}`;
-            alert(info);
-        }
 
         // ── SIDEBAR / CHAT HISTORY ───────────────────────────────
         let chatSessions = JSON.parse(localStorage.getItem('ai_chat_sessions') || '[]')
