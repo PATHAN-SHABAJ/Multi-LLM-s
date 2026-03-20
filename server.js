@@ -1,10 +1,13 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-
+const path = require('path');
 const app = express();
 app.use(express.json());
 app.use(cors());
+
+// Serve static files from current directory
+app.use(express.static(path.join(__dirname, '')));
 
 // Connect to MongoDB
 // For local MongoDB: mongodb://127.0.0.1:27017/ai_assistant
@@ -63,6 +66,11 @@ app.post('/api/login', async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: 'Server error during login' });
   }
+});
+
+// Catch-all to serve index.html
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 const PORT = process.env.PORT || 5000;
