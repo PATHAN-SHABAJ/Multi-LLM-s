@@ -1634,8 +1634,6 @@
                         </optgroup>
                     </select>
                     <button class="clear-btn" style="margin-right: 8px;" onclick="showView('compare-view')">&#128300; Compare Models</button>
-                    <button class="clear-btn" style="margin-right: 8px;" onclick="openApiModal()">⚙️ API Settings</button>
-                    <button class="clear-btn" onclick="clearChat()">Clear</button>
                 </div>
             </header>
 
@@ -1744,39 +1742,6 @@
                 </div>
             </div>
 
-        </div>
-    </div>
-
-    <!-- ── API SETTINGS MODAL ── -->
-    <div class="modal-overlay" id="api-modal">
-        <div class="modal-content">
-            <h2 style="font-size:22px; margin-bottom: 8px;">API Settings</h2>
-            <p style="color:#94a3b8; font-size:13px; margin-bottom: 24px; line-height: 1.5;">Enter your personalized API
-                keys to unlock local responses directly from the providers. These keys are securely stored only in your
-                browser's <code>localStorage</code>.</p>
-
-            <div class="form-group" style="text-align: left;">
-                <label>Google Gemini API Key</label>
-                <input type="password" id="input-gemini-key" placeholder="AIzaSy...">
-            </div>
-            <div class="form-group" style="text-align: left;">
-                <label>Anthropic Claude API Key</label>
-                <input type="password" id="input-claude-key" placeholder="sk-ant-...">
-            </div>
-            <div class="form-group" style="text-align: left;">
-                <label>OpenRouter API Key <span style="color:#64748b;font-weight:normal">(for Llama, Gemma,
-                        DeepSeek)</span></label>
-                <input type="password" id="input-openrouter-key" placeholder="sk-or-v1-...">
-            </div>
-            <div class="form-group" style="text-align: left;">
-                <label>Groq API Key <span style="color:#64748b;font-weight:normal">(Optional)</span></label>
-                <input type="password" id="input-groq-key" placeholder="gsk_...">
-            </div>
-
-            <div style="margin-top:24px; display:flex; gap:12px; justify-content:flex-end;">
-                <button class="btn-secondary" style="padding:10px 16px;" onclick="closeApiModal()">Cancel</button>
-                <button class="btn-primary" style="padding:10px 20px;" onclick="saveApiKeys()">Save Keys</button>
-            </div>
         </div>
     </div>
 
@@ -1942,46 +1907,6 @@
             renderSidebar()
         }
 
-        // ── API KEYS ──────────────────────────────────────────
-        let GEMINI_KEY = localStorage.getItem("gemini_key") || "AIz" + "aSy" + "AuTkY" + "Au4XO4c4_E" + "EZjB" + "XRhTnGHGWw" + "NyI0"
-        let OPENROUTER_KEY = localStorage.getItem("openrouter_key") || "sk" + "-or-v1-7" + "4a157d81c63" + "9b71f827" + "05ff058dcb2" + "64a269bae" + "e9b4df3a" + "efc6463cb3" + "d886e6"
-        let CLAUDE_KEY = localStorage.getItem("claude_key") || "sk-" + "ant-" + "api03-1y" + "GDpQkc_IKs" + "ZKRT2KiE" + "daEE5yS" + "ygmVwwk" + "t_TnrfV" + "MVUntZ" + "z6eYS75Y1" + "uS-lzg" + "dzDMQ" + "QUMvK" + "Q5ZPs1d" + "EMM0zb" + "w-kjkD" + "7wAA"
-        let GROQ_KEY = localStorage.getItem("groq_key") || "gsk" + "_66nu" + "fJOiEJ" + "M1OIw" + "X59l9W" + "Gdyb3F" + "Yzex3i" + "vBy3M" + "tCAT7W" + "au8kmq" + "h4"
-        // ─────────────────────────────────────────────────────
-
-        // ── API MODAL LOGIC ──
-        function openApiModal() {
-            document.getElementById('input-gemini-key').value = localStorage.getItem('gemini_key') || '';
-            document.getElementById('input-claude-key').value = localStorage.getItem('claude_key') || '';
-            document.getElementById('input-openrouter-key').value = localStorage.getItem('openrouter_key') || '';
-            document.getElementById('input-groq-key').value = localStorage.getItem('groq_key') || '';
-            document.getElementById('api-modal').classList.add('active');
-        }
-
-        function closeApiModal() {
-            document.getElementById('api-modal').classList.remove('active');
-        }
-
-        function saveApiKeys() {
-            const gemKey = document.getElementById('input-gemini-key').value.trim();
-            const clKey = document.getElementById('input-claude-key').value.trim();
-            const orKey = document.getElementById('input-openrouter-key').value.trim();
-            const grKey = document.getElementById('input-groq-key').value.trim();
-
-            if (gemKey) localStorage.setItem('gemini_key', gemKey); else localStorage.removeItem('gemini_key');
-            if (clKey) localStorage.setItem('claude_key', clKey); else localStorage.removeItem('claude_key');
-            if (orKey) localStorage.setItem('openrouter_key', orKey); else localStorage.removeItem('openrouter_key');
-            if (grKey) localStorage.setItem('groq_key', grKey); else localStorage.removeItem('groq_key');
-
-            GEMINI_KEY = gemKey || "";
-            CLAUDE_KEY = clKey || "";
-            OPENROUTER_KEY = orKey || "";
-            GROQ_KEY = grKey || "";
-
-            closeApiModal();
-            alert("API Keys saved securely to localStorage!");
-        }
-
         let geminiMessages = []
         let openrouterMessages = []
         let claudeMessages = []
@@ -2082,32 +2007,13 @@
             const config = compareModelsList[key];
             let rawReply = '';
             try {
-                if (config.provider === 'gemini') {
-                    // One-off API call, no chat history preserved here for simplicity
-                    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${config.id}:generateContent?key=${GEMINI_KEY}`, {
-                        method: "POST", headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ contents: [{ role: "user", parts: [{ text: prompt }] }] })
-                    });
-                    const data = await res.json();
-                    if (data.error) throw new Error(data.error.message);
-                    rawReply = data.candidates[0].content.parts[0].text;
-                } else if (config.provider === 'groq') {
-                    const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-                        method: "POST", headers: { "Content-Type": "application/json", "Authorization": `Bearer ${GROQ_KEY}` },
-                        body: JSON.stringify({ model: config.id, messages: [{ role: "user", content: prompt }] })
-                    });
-                    const data = await res.json();
-                    if (data.error) throw new Error(data.error.message);
-                    rawReply = data.choices[0].message.content;
-                } else if (config.provider === 'openrouter') {
-                    const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-                        method: "POST", headers: { "Content-Type": "application/json", "Authorization": `Bearer ${OPENROUTER_KEY}` },
-                        body: JSON.stringify({ model: config.id, messages: [{ role: "user", content: prompt }] })
-                    });
-                    const data = await res.json();
-                    if (data.error) throw new Error(data.error.message);
-                    rawReply = data.choices[0].message.content;
-                }
+                const res = await fetch("/api/compare", {
+                    method: "POST", headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ provider: config.provider, model: config.id, prompt })
+                });
+                const data = await res.json();
+                if (data.error) throw new Error(data.error);
+                rawReply = data.reply;
                 const timeStr = ((performance.now() - start) / 1000).toFixed(2) + 's';
                 document.getElementById(`time-${key}`).innerText = timeStr;
                 document.getElementById(`cb-${key}`).innerHTML = parseMarkdown(rawReply);
@@ -2154,94 +2060,54 @@
         // ── GEMINI ────────────────────────────────────────────
         async function callGemini(model, text) {
             geminiMessages.push({ role: "user", parts: [{ text }] })
-
-            const res = await fetch(
-                `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${GEMINI_KEY}`,
-                {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ contents: geminiMessages })
-                }
-            )
+            const res = await fetch("/api/chat", {
+                method: "POST", headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ provider: "gemini", model, messages: geminiMessages })
+            })
             const data = await res.json()
-
-            if (data.error) throw new Error(`Gemini ${data.error.code}: ${data.error.message.slice(0, 120)}`)
-
-            const reply = data.candidates[0].content.parts[0].text
-            geminiMessages.push({ role: "model", parts: [{ text: reply }] })
-            return reply
+            if (data.error) throw new Error(data.error)
+            geminiMessages.push({ role: "model", parts: [{ text: data.reply }] })
+            return data.reply
         }
 
         // ── CLAUDE (DIRECT) ───────────────────────────────────
         async function callClaude(model, text) {
             claudeMessages.push({ role: "user", content: text })
-
-            const res = await fetch("https://api.anthropic.com/v1/messages", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "x-api-key": CLAUDE_KEY,
-                    "anthropic-version": "2023-06-01",
-                    "anthropic-dangerous-direct-browser-access": "true"
-                },
-                body: JSON.stringify({
-                    model,
-                    max_tokens: 2048,
-                    messages: claudeMessages
-                })
+            const res = await fetch("/api/chat", {
+                method: "POST", headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ provider: "claude", model, messages: claudeMessages })
             })
             const data = await res.json()
-
-            if (data.error) throw new Error(`Claude ${data.error.type || ""}: ${(data.error.message || "").slice(0, 120)}`)
-
-            const reply = data.content[0].text
-            claudeMessages.push({ role: "assistant", content: reply })
-            return reply
+            if (data.error) throw new Error(data.error)
+            claudeMessages.push({ role: "assistant", content: data.reply })
+            return data.reply
         }
 
         // ── GROQ ────────────────────────────────────────────
         async function callGroq(model, text) {
             groqMessages.push({ role: "user", content: text })
-
-            const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${GROQ_KEY}`
-                },
-                body: JSON.stringify({ model, messages: groqMessages, max_tokens: 2048 })
+            const res = await fetch("/api/chat", {
+                method: "POST", headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ provider: "groq", model, messages: groqMessages })
             })
             const data = await res.json()
-
-            if (data.error) throw new Error(`Groq: ${(data.error.message || JSON.stringify(data.error)).slice(0, 120)}`)
-
-            const reply = data.choices[0].message.content
-            groqMessages.push({ role: "assistant", content: reply })
-            return reply
+            if (data.error) throw new Error(data.error)
+            groqMessages.push({ role: "assistant", content: data.reply })
+            return data.reply
         }
 
 
         // ── OPENROUTER ────────────────────────────────────────
         async function callOpenRouter(model, text) {
             openrouterMessages.push({ role: "user", content: text })
-
-            const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${OPENROUTER_KEY}`,
-                    "HTTP-Referer": "https://localhost",
-                    "X-Title": "AI Assistant"
-                },
-                body: JSON.stringify({ model, messages: openrouterMessages })
+            const res = await fetch("/api/chat", {
+                method: "POST", headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ provider: "openrouter", model, messages: openrouterMessages })
             })
             const data = await res.json()
-
-            if (data.error) throw new Error(`OpenRouter ${data.error.code || ""}: ${(data.error.message || JSON.stringify(data.error)).slice(0, 120)}`)
-
-            const reply = data.choices[0].message.content
-            openrouterMessages.push({ role: "assistant", content: reply })
-            return reply
+            if (data.error) throw new Error(data.error)
+            openrouterMessages.push({ role: "assistant", content: data.reply })
+            return data.reply
         }
 
         // ── MARKDOWN PARSER ───────────────────────────────────
